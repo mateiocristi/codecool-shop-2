@@ -1,6 +1,11 @@
 package com.codecool.shop.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.lang.reflect.Field;
 
 public class BaseModel {
