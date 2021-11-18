@@ -12,7 +12,7 @@ public interface ProductDao {
 
     void add(Product product) throws IOException;
     Product find(int id);
-    void remove(int id);
+    void remove(int id) throws IOException;
 
     List<Product> getAll();
     List<Product> getBy(Supplier supplier);

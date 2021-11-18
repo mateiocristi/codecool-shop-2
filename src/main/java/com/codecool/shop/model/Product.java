@@ -8,13 +8,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-@JsonIgnoreProperties(
-        {"productCategory", "supplier"}
-)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product extends BaseModel {
 
     private BigDecimal defaultPrice;
