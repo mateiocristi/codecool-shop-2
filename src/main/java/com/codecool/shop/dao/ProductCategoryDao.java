@@ -9,6 +9,7 @@ public interface ProductCategoryDao {
 
     void add(ProductCategory category) throws IOException;
     ProductCategory find(int id);
+    ProductCategory find(String name);
     void remove(int id) throws IOException;
 
     List<ProductCategory> getAll();
