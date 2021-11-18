@@ -94,6 +94,11 @@ public class ProductDaoMem implements ProductDao {
         return data.stream().filter(t -> t.getProductCategory().equals(productCategory)).collect(Collectors.toList());
     }
 
+    @Override
+    public Product getBy(int id) {
+        return data.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+    }
+
     private void updateJson() throws IOException {
         gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductSerializer()).create();
         fileWriter = new FileWriter("./src/main/java/resources/productsDB.txt");

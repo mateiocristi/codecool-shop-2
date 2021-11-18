@@ -24,12 +24,12 @@ public class ProductService{
         return productCategoryDao.find(categoryId);
     }
 
-    public List<Product> getProductsForCategoryId(int categoryId){
+    public List<Product> getProductsForId(int categoryId){
         var category = productCategoryDao.find(categoryId);
         return productDao.getBy(category);
     }
 
-    public List<Product> getProductsForCategoryId(String categoryName){
+    public List<Product> getProductsForCategory(String categoryName){
         var category = productCategoryDao.find(categoryName);
         return productDao.getBy(category);
     }
