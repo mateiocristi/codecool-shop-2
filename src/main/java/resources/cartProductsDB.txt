@@ -1,0 +1,1 @@
+[{"id":2,"name":"Lenovo Pad","description":"Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.","defaultPrice":49.9,"defaultCurrency":"USD","productCategory":1,"supplier":2}]

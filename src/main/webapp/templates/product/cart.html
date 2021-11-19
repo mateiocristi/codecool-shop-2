@@ -32,25 +32,30 @@
 <body>
 
 <div th:replace="navbar.html :: copy"></div>
-<!--<div class="jumbotron text-center">-->
-<!--    <h1>Codecool Shop</h1>-->
-<!--</div>-->
+<div class="jumbotron text-center">
+    <h1>Cart checkout</h1>
+</div>
 
 <div class="container">
-    <div class="product-card">
-        <img class="img" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${product.id} + '.jpg'" alt="" />
-        <div class="card-header">
-            <h4 class="card-title" th:text="${product.getName()}">Product name</h4>
-            <p class="card-text" th:text="${product.description}">Product description... </p>
-        </div>
-        <div class="card-body">
-            <div class="card-text">
-                <p class="lead" th:text="${product.getPrice()}">100 USD</p>
-            </div>
-            <div class="card-text">
-                <button class="btn btn-success" th:id="${product.id}">Add to cart</button>
-            </div>
-        </div>
+    <div class="cart-list-container">
+        <table class="cart-list-table" style="width:100%">
+            <tr class="card-title">
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            <tr class="card-title" th:each="cartProd,iterStat : ${cartProducts}">
+                <td th:text="${cartProd.name}">Asus Laptop</td>
+                <td th:text="${cartProd.defaultPrice + ' ' +cartProd.defaultCurrency}">199 USD</td>
+                <td th:text="${cartProd.description}">Some description....</td>
+                <td> <div class="card-text">
+                        <button type="button" class="btn btn-danger" th:id="${cartProd.id}">Remove</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
     </div>
 
     <div id="products" class="row">
