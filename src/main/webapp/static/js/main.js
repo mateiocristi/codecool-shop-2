@@ -1,5 +1,5 @@
 function init() {
-    alert("im good32");
+    // alert("im good32");
     const categorySelector = document.querySelector(`#categorySorter`);
     const supplierSelector = document.querySelector(`#supplierSorter`);
     const addButtons = document.querySelectorAll(`.btn-success`);
