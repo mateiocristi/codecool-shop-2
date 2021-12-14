@@ -1,0 +1,1 @@
+[{"id":1,"name":"Amazon","description":"Digital content and services"},{"id":2,"name":"Lenovo","description":"Computers"},{"id":3,"name":"Asus","description":"Laptops"}]
