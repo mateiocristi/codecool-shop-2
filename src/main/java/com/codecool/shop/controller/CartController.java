@@ -32,15 +32,19 @@ public class CartController extends HttpServlet {
 
             UserModel user = dbManager.getUser(Integer.parseInt(userId));
             List<Product> cartProducts = new ArrayList<>();
+            double totalPrice = 0;
 
             for (int i = 0; i < user.getCartProductsId().size(); i++) {
                 cartProducts.add(dbManager.getProduct(user.getCartProductsId().get(i)));
+                totalPrice += cartProducts.get(i).getActualPrice().doubleValue();
             }
 
             TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
             WebContext context = new WebContext(req, resp, req.getServletContext());
 
             // get from database
+
+            context.setVariable("totalPrice", String.format("%.2f",totalPrice));
             context.setVariable("cartProducts", cartProducts);
             context.setVariable("products", dbManager.getAllProducts());
 

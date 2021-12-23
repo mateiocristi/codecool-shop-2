@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/api/shoppingCart/add")
@@ -28,6 +29,7 @@ public class AddToCartApi extends HttpServlet {
         String userId = session.getAttribute("userId").toString();
         if ( userId != null) {
 
+            Gson gson;
             System.out.println("user is " + userId);
 
             DatabaseManager databaseManager = new DatabaseManager();
@@ -37,13 +39,19 @@ public class AddToCartApi extends HttpServlet {
 
             UserModel user = databaseManager.getUser(Integer.parseInt(userId));
             user.addToCart(Integer.parseInt(productId));
-//            System.out.println("test");
-//            user.getCartProductsId().forEach(System.out::println);
-
             databaseManager.updateCart(user);
 
+            List<Product> cartProducts = new ArrayList<>();
+
+            for (int i = 0; i < user.getCartProductsId().size(); i++) {
+                cartProducts.add(databaseManager.getProduct(user.getCartProductsId().get(i)));
+            }
+
             PrintWriter out = response.getWriter();
-            out.println("{'response': 'ok'}");
+            gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductSerializer()).create();
+            out.println(gson.toJson(cartProducts));
+
+
         }
 
 

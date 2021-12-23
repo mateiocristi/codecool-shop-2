@@ -9,9 +9,10 @@ function init() {
         console.log("adding..")
         button.addEventListener("click", function () {
             apiPost("/api/shoppingCart/add" + `?id=${button.id}` , {"id": button.id})
-                .then(apiGet("/api/shoppingCart/getAll").then((response) => {
-                    updateCart(cartContainer, response);
-                }))
+                .then(response => {
+                    updateCart(cartContainer, response)
+                    init();
+                })
         })
     });
 
@@ -19,9 +20,11 @@ function init() {
         button.addEventListener("click", function () {
             console.log("clicked remove")
             apiPost("/api/shoppingCart/remove" + `?id=${button.id}` , {"id": button.id})
-                .then(apiGet("/api/shoppingCart/getAll").then((response) => {
-                    updateCart(cartContainer, response);
-                }))
+                .then(response => {
+                    updateCart(cartContainer, response)
+                    init();
+                })
+
         })
     });
 
@@ -62,7 +65,9 @@ function updateCart(container, responseData) {
                   <th>Price</th>
                   <th></th>
               </tr>`)
+    let totalPrice = 0;
     responseData.forEach((cartProd) => {
+        totalPrice += cartProd["actualPrice"];
         container.insertAdjacentHTML("beforeend",
             `
                 <tr class="card-title">
@@ -76,6 +81,11 @@ function updateCart(container, responseData) {
                 </tr>
                   `)
     })
+    const price = document.querySelector(`.total-price`);
+    totalPrice = Math.floor(totalPrice * 100) / 100
+    price.innerHTML = totalPrice.toString();
+
 }
 
 init();
+ 
