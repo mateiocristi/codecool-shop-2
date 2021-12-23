@@ -1,15 +1,10 @@
 package com.codecool.shop.servlets;
 
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.CartDaoMem;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.DBmodels.UserModel;
+import com.codecool.shop.dao.database.DatabaseManager;
 import com.codecool.shop.model.Product;
+import com.codecool.shop.model.User;
 import com.codecool.shop.serialization.ProductSerializer;
-import com.codecool.shop.service.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,10 +13,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "/api/shoppingCart/add")
 public class AddToCartApi extends HttpServlet {
@@ -29,24 +24,32 @@ public class AddToCartApi extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(true);
+        String userId = session.getAttribute("userId").toString();
+        if ( userId != null) {
 
-        Gson gson;
-        CartDaoMem cartDaoMem = CartDaoMem.getInstance();
-        ProductDaoMem productDaoMem = ProductDaoMem.getInstance();
-        String productId = request.getParameter("id");
+            System.out.println("user is " + userId);
 
-        Product product = productDaoMem.getBy(Integer.parseInt(productId));
+            DatabaseManager databaseManager = new DatabaseManager();
+            databaseManager.run();
+            String productId = request.getParameter("id");
+            System.out.println("adding to cart api " + productId);
 
-        if (cartDaoMem.find(Integer.parseInt(productId)) == null) {
-            cartDaoMem.add(product);
+            UserModel user = databaseManager.getUser(Integer.parseInt(userId));
+            user.addToCart(Integer.parseInt(productId));
+//            System.out.println("test");
+//            user.getCartProductsId().forEach(System.out::println);
+
+            databaseManager.updateCart(user);
+
+            PrintWriter out = response.getWriter();
+            out.println("{'response': 'ok'}");
         }
 
-        List<Product> cartProducts = cartDaoMem.getAll();
-
-        PrintWriter out = response.getWriter();
-        gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductSerializer()).create();
-        out.println(gson.toJson(cartProducts));
 
     }
 }
 
+//            Gson gson;
+//            gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductSerializer()).create();
+//            out.println(gson.toJson(cartProducts));

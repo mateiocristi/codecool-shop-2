@@ -1,9 +1,6 @@
 package com.codecool.shop.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.codecool.shop.dao.DBmodels.ProductModel;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -11,32 +8,55 @@ import java.util.Currency;
 public class Product extends BaseModel {
 
     private BigDecimal defaultPrice;
+    private BigDecimal actualPrice;
     private Currency defaultCurrency;
-    private ProductCategory productCategory;
+    private Category productCategory;
     private Supplier supplier;
 
-    public Product(String name, BigDecimal defaultPrice, String currencyString, String description, ProductCategory productCategory, Supplier supplier) {
+    public Product(String name, String description, BigDecimal defaultPrice, BigDecimal actualPrice , String currencyString, Category productCategory, Supplier supplier) {
         super(name, description);
         this.setPrice(defaultPrice, currencyString);
+        this.setActualPrice(actualPrice);
         this.setSupplier(supplier);
-        this.setProductCategory(productCategory);
+        this.setCategory(productCategory);
+
+    }
+
+    public Product(String name, String description, BigDecimal defaultPrice, String currencyString, Category productCategory, Supplier supplier) {
+        super(name, description);
+        this.setPrice(defaultPrice, currencyString);
+        this.setActualPrice(defaultPrice);
+        this.setSupplier(supplier);
+        this.setCategory(productCategory);
+
+    }
+
+    public Product(ProductModel productModel, Category category, Supplier supplier) {
+        super(productModel.getName(), productModel.getDescription());
+        this.id = productModel.getId();
+        this.setPrice(new BigDecimal(productModel.getDefaultPrice()), productModel.getDefaultCurrency());
+        this.setActualPrice(new BigDecimal(productModel.getActualPrice()));
+        this.setSupplier(supplier);
+        this.setCategory(category);
     }
 
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
     }
 
-    public void setDefaultPrice(BigDecimal defaultPrice) {
-        this.defaultPrice = defaultPrice;
+
+    public BigDecimal getActualPrice() {
+        return actualPrice;
+    }
+
+    public void setActualPrice(BigDecimal actualPrice) {
+        this.actualPrice = actualPrice;
     }
 
     public Currency getDefaultCurrency() {
         return defaultCurrency;
     }
 
-    public void setDefaultCurrency(Currency defaultCurrency) {
-        this.defaultCurrency = defaultCurrency;
-    }
 
     public String getPrice() {
         return String.valueOf(this.defaultPrice) + " " + this.defaultCurrency.toString();
@@ -47,11 +67,11 @@ public class Product extends BaseModel {
         this.defaultCurrency = Currency.getInstance(currency);
     }
 
-    public ProductCategory getProductCategory() {
+    public Category getCategory() {
         return productCategory;
     }
 
-    public void setProductCategory(ProductCategory productCategory) {
+    public void setCategory(Category productCategory) {
         this.productCategory = productCategory;
         this.productCategory.addProduct(this);
     }

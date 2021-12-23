@@ -1,14 +1,12 @@
 package com.codecool.shop.servlets;
 
-import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.CategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.database.DatabaseManager;
+import com.codecool.shop.model.Category;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.serialization.ProductSerializer;
-import com.codecool.shop.service.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,10 +28,8 @@ public class FilterProductsApi extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         Gson gson;
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
-        ProductService productService = new ProductService(productDataStore,productCategoryDataStore, supplierDataStore);
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.run();
 
         String category = request.getParameter("category");
         String supplier = request.getParameter("supplier");
@@ -43,13 +39,14 @@ public class FilterProductsApi extends HttpServlet {
         if(category.equals("All")) {
             // if no category and no supplier selected
             if (supplier.equals("All"))
-                products = productDataStore.getAll();
+                products = databaseManager.getAllProducts();
             // if no category selected
             else
-                products = productDataStore.getAll().stream().filter(t -> t.getSupplier().getName().equals(supplier)).collect(Collectors.toList());
+                products = databaseManager.getAllProducts().stream().filter(t -> t.getSupplier().getName().equals(supplier)).collect(Collectors.toList());
             // if category selected
         } else {
-            products = productService.getProductsForCategory(category);
+            Category categ = databaseManager.getCategory(category);
+            products = databaseManager.getProductsByCategory(categ.getId());
             // if supplier selected
             if (!supplier.equals("All")) {
                 products = products.stream().filter(t -> t.getSupplier().getName().equals(supplier)).collect(Collectors.toList());

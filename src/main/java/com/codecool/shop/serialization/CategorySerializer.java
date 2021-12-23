@@ -1,13 +1,13 @@
 package com.codecool.shop.serialization;
 
-import com.codecool.shop.model.ProductCategory;
+import com.codecool.shop.model.Category;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class CategorySerializer implements JsonSerializer<ProductCategory>, JsonDeserializer<ProductCategory> {
+public class CategorySerializer implements JsonSerializer<Category>, JsonDeserializer<Category> {
     @Override
-    public JsonElement serialize(ProductCategory productCategory, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Category productCategory, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("id", productCategory.getId());
         jsonObject.addProperty("name", productCategory.getName());
@@ -16,11 +16,11 @@ public class CategorySerializer implements JsonSerializer<ProductCategory>, Json
         return jsonObject;
     }
     @Override
-    public ProductCategory deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Category deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
 
-        ProductCategory productCategory = new ProductCategory(
+        Category productCategory = new Category(
                 jsonObject.get("name").getAsString(),
                 jsonObject.get("department").getAsString(),
                 jsonObject.get("description").getAsString()

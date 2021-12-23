@@ -1,33 +1,15 @@
 function init() {
-    // alert("im good32");
     const categorySelector = document.querySelector(`#categorySorter`);
     const supplierSelector = document.querySelector(`#supplierSorter`);
     const addButtons = document.querySelectorAll(`.btn-success`);
-    const removeButtons = document.querySelectorAll(`.btn-danger`);
-    const cartContainer = document.querySelector(`.cart-list-table`);
+    // const removeButtons = document.querySelectorAll(`.btn-danger`);
     // console.log(cartContainer);
-    removeButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            console.log("clicked remove")
-            apiPost("/api/shoppingCart/remove" + `?id=${button.id}` , {"id": button.id}).then((responseData) => {
-                if (cartContainer != null) {
-                    updateCart(cartContainer, responseData);
-                }
-
-            })
-        })
-    })
 
     addButtons.forEach((button) => {
         button.addEventListener("click", function () {
-            apiPost("/api/shoppingCart/add" + `?id=${button.id}` , {"id": button.id}).then((responseData) => {
-                if (cartContainer != null) {
-                    updateCart(cartContainer, responseData);
-                }
-
-            })
+            apiPost("/api/shoppingCart/add" + `?id=${button.id}` , {"id": button.id})
         })
-    })
+    });
 
     supplierSelector.addEventListener("change", function () {
         apiGet(categorySelector.value, supplierSelector.value, "/api/get/products").then((responseData) => {
@@ -101,23 +83,23 @@ function showProducts(responseData) {
     const contentDiv = document.querySelector(`.row`);
     contentDiv.innerHTML = "";
     responseData.forEach((prod) => {
+        console.log(prod.id)
         contentDiv.insertAdjacentHTML("beforeend",
-            `<div class="card">
-                <img class="" src="../static/img/product_${prod["id"]}.jpg" alt="" />
-                <div class="card-header">
-                    <h4 class="card-title">${prod["name"]}</h4>
-                    <p class="card-text">${prod["description"]}</p>
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <p class="lead" >${prod["defaultPrice"]} ${prod["defaultCurrency"]}</p>
-                    </div>
-                    <div class="card-text">
-                        <a class="btn btn-success" href="#">Add to cart</a>
-                    </div>
-                </div>
-            </div>`
-            )
+            `<div class="col col-sm-12 col-md-6 col-lg-4" id="${prod["id"]}">
+                      <img class="img" src="../static/img/product_${prod["id"]}.jpg" alt="" />
+                       <div class="card-header">
+                           <h4 class="card-title">${prod["name"]}</h4>
+                           <p class="card-text">${prod["description"]}</p>
+                       </div>
+                       <div class="card-body">
+                           <div class="card-text">
+                               <p class="lead" >${prod["defaultPrice"]} ${prod["defaultCurrency"]}</p>
+                           </div>
+                           <div class="card-text">
+                               <a class="btn btn-success" href="#">Add to cart</a>
+                           </div>
+                       </div>
+                   </div>`)
     })
 }
 

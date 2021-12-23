@@ -1,16 +1,8 @@
 package com.codecool.shop.serialization;
 
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
 import com.codecool.shop.model.Supplier;
-import com.codecool.shop.service.ProductService;
 import com.google.gson.*;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 
 public class SupplierSerializer implements JsonSerializer<Supplier>, JsonDeserializer<Supplier> {

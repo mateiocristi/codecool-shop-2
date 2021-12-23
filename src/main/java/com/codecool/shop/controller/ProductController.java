@@ -1,14 +1,11 @@
 package com.codecool.shop.controller;
 
-import com.codecool.shop.dao.ProductCategoryDao;
+import com.codecool.shop.dao.CategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.service.ProductService;
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.database.DatabaseManager;
+import com.codecool.shop.model.Product;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -17,27 +14,30 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
-        SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
-        ProductService productService = new ProductService(productDataStore,productCategoryDataStore, supplierDataStore);
+        HttpSession session = req.getSession();
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.run();
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
+        List<Product> productList = databaseManager.getAllProducts();
         WebContext context = new WebContext(req, resp, req.getServletContext());
-        context.setVariable("categories", productCategoryDataStore.getAll());
+
+        System.out.println("session Id: " + session.getAttribute("userId"));
+
+        context.setVariable("categories", databaseManager.getAllCategories());
         context.setVariable("category", "All");
-        context.setVariable("products", productDataStore.getAll());
+        context.setVariable("products", databaseManager.getAllProducts());
         context.setVariable("supplier", "All");
-        context.setVariable("suppliers", supplierDataStore.getAll());
+        context.setVariable("suppliers", databaseManager.getAllSuppliers());
         // Alternative setting of the template context
         // Map<String, Object> params = new HashMap<>();
         // params.put("category", productCategoryDataStore.find(1));
