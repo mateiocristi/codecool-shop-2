@@ -18,11 +18,11 @@
 - Adding payment methods
 - Supplier accounts for adding and managing products stocks
 
-##Technologies used:
+## Technologies used:
 
 - Java Servlets
 - Thymeleaf
 - PostgreSQL
 
-##Classes diagram
+## Classes diagram
 ![img.png](img.png)
